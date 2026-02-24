@@ -25,9 +25,9 @@ export type Gifticon = {
 };
 
 export type GifticonFilter = {
-  status?: GifticonStatus;
-  favoriteOnly?: boolean;
-  category?: GifticonCategory | 'all';
+  status: GifticonStatus;
+  favoriteOnly: boolean;
+  categories: GifticonCategory[];
 };
 export type GifticonSortOption =
   | 'recommended'
