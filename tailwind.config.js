@@ -5,6 +5,10 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['pretMedium'], // 기본 폰트
+        bold: ['pretBold'], // font-bold
+      },
       colors: {
         primary: '#F6764E',
         secondary: '#FBE5DE',
