@@ -1,8 +1,9 @@
 import './global.css';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View, Text } from 'react-native';
 import { useFonts } from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from '@/navigation/TabNavigator';
 
 export default function App() {
   const [loaded] = useFonts({
@@ -13,9 +14,9 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-xl font-bold">GIFTEE</Text>
-      </View>
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
       <StatusBar style="auto" />
     </SafeAreaProvider>
   );
