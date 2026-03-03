@@ -1,13 +1,15 @@
 import { View, Text, Pressable, Image } from 'react-native';
-import type { Gifticon } from '@/features/gifticon/types';
 import { getDaysRemaining } from '@/features/gifticon/utils/date';
+import type { ExpiringSoonGifticon } from '../types';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '@/navigation/RootNavigator';
 
-type Props = {
-  gifticon: Pick<Gifticon, 'id' | 'brand' | 'productName' | 'expiresAt' | 'imageUrl'>;
-  onPress?: (id: string) => void;
-};
+type Nav = NativeStackNavigationProp<RootStackParamList>;
 
-export default function ExpiringSoonCard({ gifticon, onPress }: Props) {
+export default function ExpiringSoonCard(gifticon: ExpiringSoonGifticon) {
+  const navigation = useNavigation<Nav>();
+
   return (
     <View className="bg-muted relative w-[302px] flex-col">
       {TearLine('top')}
@@ -30,7 +32,7 @@ export default function ExpiringSoonCard({ gifticon, onPress }: Props) {
       {TearLine('mid')}
       {/* 버튼 */}
       <Pressable
-        onPress={() => onPress?.(gifticon.id)}
+        onPress={() => navigation.navigate('GifticonDetail', { id: gifticon.id })}
         className="bg-primary h-[58px] items-center justify-center">
         <Text className="font-pretBold text-[16px] text-white">사용하러 가기</Text>
       </Pressable>
