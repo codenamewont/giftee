@@ -6,8 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['pretMedium'], // 기본 폰트
-        bold: ['pretBold'], // font-bold
+        pretMedium: ['pretMedium'],
+        pretBold: ['pretBold'],
       },
       colors: {
         primary: '#F6764E',
@@ -19,6 +19,7 @@ module.exports = {
           text: '#979797',
           ui: '#D9D9D9',
         },
+        muted: '#E8E8E8',
       },
     },
   },

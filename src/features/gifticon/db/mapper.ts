@@ -1,5 +1,5 @@
-import { Gifticon } from '../types';
 import { GifticonRow } from './types';
+import type { DateString, DateTimeString, Gifticon } from '../types';
 
 // DB Row를 Gifticon 도메인 모델로 매핑
 export const toGifticon = (row: GifticonRow): Gifticon => ({
@@ -11,7 +11,7 @@ export const toGifticon = (row: GifticonRow): Gifticon => ({
   category: row.category,
 
   price: row.price,
-  expiresAt: row.expires_at,
+  expiresAt: row.expires_at as DateString,
 
   status: row.status,
   usedAt: row.used_at ?? undefined,
