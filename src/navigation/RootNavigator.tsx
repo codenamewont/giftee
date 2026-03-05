@@ -11,7 +11,18 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackButtonDisplayMode: 'minimal',
+        headerTitleAlign: 'center',
+        headerTintColor: '#111111',
+        headerShadowVisible: false,
+        headerTitleStyle: {
+          fontFamily: 'pretBold',
+          fontSize: 16,
+          color: '#111111',
+        },
+      }}>
       <Stack.Screen name="MainTabs" component={TabNavigator} options={{ headerShown: false }} />
       <Stack.Screen
         name="GifticonDetail"

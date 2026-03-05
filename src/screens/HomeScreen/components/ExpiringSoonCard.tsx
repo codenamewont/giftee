@@ -16,7 +16,7 @@ export default function ExpiringSoonCard(gifticon: ExpiringSoonGifticon) {
       {/* 이미지 */}
       <Image source={{ uri: gifticon.imageUrl }} className="h-[204px] w-full" resizeMode="cover" />
       {/* 텍스트 */}
-      <View className="h-[58px] flex-row items-center justify-between bg-white px-4">
+      <View className="-mt-[1px] h-[58px] flex-row items-center justify-between bg-white px-4">
         <View className="gap-[4px]">
           <Text className="font-pretMedium text-gray-text text-[12px] leading-[14px]">
             {gifticon.brand}
