@@ -36,3 +36,8 @@ export type GifticonSortOption =
   | 'priceHigh'
   | 'priceLow'
   | 'recent';
+
+export type GifticonListItemData = Pick<
+  Gifticon,
+  'id' | 'brand' | 'productName' | 'expiresAt' | 'status' | 'imageUrl'
+>;

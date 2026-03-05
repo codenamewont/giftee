@@ -1,24 +1,20 @@
 import { View, Text, Pressable, Image } from 'react-native';
 import { getDaysRemaining } from '../utils/date';
-import type { Gifticon } from '../types';
 import { formatDate } from '../utils/date';
+import type { GifticonListItemData } from '../types';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '@/navigation/RootNavigator';
 
-type GifticonListItemProps = Pick<
-  Gifticon,
-  'id' | 'brand' | 'productName' | 'expiresAt' | 'status' | 'imageUrl'
-> & {
-  onPress?: (id: string) => void;
+type Nav = NativeStackNavigationProp<RootStackParamList>;
+
+type Props = {
+  item: GifticonListItemData;
 };
 
-export default function GifticonListItem({
-  id,
-  brand,
-  productName,
-  expiresAt,
-  status,
-  imageUrl,
-  onPress,
-}: GifticonListItemProps) {
+export default function GifticonListItem({ item }: Props) {
+  const navigation = useNavigation<Nav>();
+  const { id, brand, productName, expiresAt, status, imageUrl } = item;
   const remaining = getDaysRemaining(expiresAt);
   let countdownBg = 'bg-white';
   let countdownText = 'text-primary';
@@ -39,7 +35,7 @@ export default function GifticonListItem({
 
   return (
     <Pressable
-      onPress={() => onPress?.(id)}
+      onPress={() => navigation.navigate('GifticonDetail', { id })}
       className="relative h-20 w-full flex-row overflow-hidden">
       {TearLine('left')}
       <View

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, Text, View, useWindowDimensions } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import ExpiringSoonCard from './ExpiringSoonCard';
 import type { ExpiringSoonGifticon } from '../types';
 
@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function ExpiringSoonSection({ items }: Props) {
-  const { width } = useWindowDimensions();
   const [page, setPage] = useState(0);
 
   const CARD_GAP = 14;
