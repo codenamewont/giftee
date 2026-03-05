@@ -2,6 +2,7 @@ import { View, ScrollView } from 'react-native';
 import HomeHeader from './components/HomeHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ExpiringSoonSection from './components/ExpiringSoonSection';
+import TotalUsageSection from './components/TotalUsageSection';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -26,9 +27,11 @@ export default function HomeScreen() {
           flexGrow: 1,
           paddingTop: 124 + insets.top,
           paddingBottom: 24,
+          gap: 24,
         }}
         showsVerticalScrollIndicator={false}>
         <ExpiringSoonSection />
+        <TotalUsageSection />
       </ScrollView>
     </View>
   );

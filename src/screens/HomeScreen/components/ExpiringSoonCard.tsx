@@ -11,7 +11,7 @@ export default function ExpiringSoonCard(gifticon: ExpiringSoonGifticon) {
   const navigation = useNavigation<Nav>();
 
   return (
-    <View className="bg-muted relative w-[302px] flex-col">
+    <View className="bg-muted relative w-[302px] flex-col overflow-hidden">
       {TearLine('top')}
       {/* 이미지 */}
       <Image source={{ uri: gifticon.imageUrl }} className="h-[204px] w-full" resizeMode="cover" />

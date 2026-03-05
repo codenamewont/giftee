@@ -38,7 +38,9 @@ export default function GifticonListItem({
   }
 
   return (
-    <Pressable onPress={() => onPress?.(id)} className="relative h-20 w-full flex-row">
+    <Pressable
+      onPress={() => onPress?.(id)}
+      className="relative h-20 w-full flex-row overflow-hidden">
       {TearLine('left')}
       <View
         className={`flex-1 flex-row items-center gap-3 px-5 py-3 ${

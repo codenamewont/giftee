@@ -7,8 +7,8 @@ import RootNavigator from '@/navigation/RootNavigator';
 
 export default function App() {
   const [loaded] = useFonts({
-    pretMedium: require('./assets/fonts/Pretendard-Medium.otf'),
-    pretBold: require('./assets/fonts/Pretendard-Bold.otf'),
+    pretMedium: require('@/assets/fonts/Pretendard-Medium.otf'),
+    pretBold: require('@/assets/fonts/Pretendard-Bold.otf'),
   });
   if (!loaded) return null;
 
