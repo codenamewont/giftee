@@ -1,7 +1,7 @@
 import type { GifticonCategory } from '../types';
 
 const RULES: Array<{ category: GifticonCategory; keywords: string[] }> = [
-  { category: 'voucher', keywords: ['금액권', '상품권', '기프트카드'] },
+  { category: 'voucher', keywords: ['금액권', '상품권', '기프트카드', 'gift card'] },
   { category: 'convenience', keywords: ['편의점', 'cu', 'gs25', '세븐일레븐', '이마트24'] },
   {
     category: 'chicken/pizza',
