@@ -39,6 +39,8 @@ const favoriteItems: GifticonListItemData[] = [
     expiresAt: '2026-12-31',
     status: 'active',
     imageUrl: 'https://picsum.photos/200',
+    category: 'cafe/dessert',
+    isFavorite: true,
   },
   {
     id: '2',
@@ -47,6 +49,8 @@ const favoriteItems: GifticonListItemData[] = [
     expiresAt: '2025-04-20',
     status: 'expired',
     imageUrl: 'https://picsum.photos/201',
+    category: 'cafe/dessert',
+    isFavorite: true,
   },
   {
     id: '3',
@@ -55,6 +59,8 @@ const favoriteItems: GifticonListItemData[] = [
     expiresAt: '2026-03-10',
     status: 'active',
     imageUrl: 'https://picsum.photos/202',
+    category: 'voucher',
+    isFavorite: true,
   },
   {
     id: '4',
@@ -63,6 +69,8 @@ const favoriteItems: GifticonListItemData[] = [
     expiresAt: '2026-04-30',
     status: 'used',
     imageUrl: 'https://picsum.photos/203',
+    category: 'chicken/pizza',
+    isFavorite: true,
   },
 ];
 
@@ -70,7 +78,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="bg-background flex-1">
+    <View className="flex-1 bg-background">
       {/* 고정 헤더 */}
       <View
         className="absolute left-0 right-0 top-0 z-50 bg-white"

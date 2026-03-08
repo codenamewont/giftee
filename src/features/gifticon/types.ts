@@ -39,5 +39,5 @@ export type GifticonSortOption =
 
 export type GifticonListItemData = Pick<
   Gifticon,
-  'id' | 'brand' | 'productName' | 'expiresAt' | 'status' | 'imageUrl'
+  'id' | 'brand' | 'productName' | 'category' | 'expiresAt' | 'status' | 'isFavorite' | 'imageUrl'
 >;

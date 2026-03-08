@@ -30,11 +30,11 @@ export default function CouponFilterChips({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      style={{ flexGrow: 0, flexShrink: 0 }}
       contentContainerStyle={{
         paddingHorizontal: 16,
+        paddingVertical: 18,
         gap: 8,
-        height: 76,
-        display: 'flex',
         alignItems: 'center',
       }}>
       {/* favorite */}
