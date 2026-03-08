@@ -1,9 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
+import GifticonCreateScreen from '@/screens/GifticonCreateScreen';
 import GifticonDetailScreen from '@/screens/GifticonDetailScreen';
 
 export type RootStackParamList = {
   MainTabs: undefined;
+  GifticonCreate: undefined;
   GifticonDetail: { id: string };
 };
 
@@ -24,6 +26,11 @@ export default function RootNavigator() {
         },
       }}>
       <Stack.Screen name="MainTabs" component={TabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="GifticonCreate"
+        component={GifticonCreateScreen}
+        options={{ title: '쿠폰 등록' }}
+      />
       <Stack.Screen
         name="GifticonDetail"
         component={GifticonDetailScreen}

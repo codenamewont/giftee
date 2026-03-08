@@ -8,6 +8,7 @@ const TAB_BAR_HEIGHT = 80;
 
 export default function TabBar({ state, navigation }: BottomTabBarProps) {
   const { bottom } = useSafeAreaInsets();
+  const parentNavigation = navigation.getParent();
 
   return (
     <View
@@ -23,7 +24,12 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
         };
 
         if (route.name === '+') {
-          return <TabAddButton key={route.key} onPress={onPress} />;
+          return (
+            <TabAddButton
+              key={route.key}
+              onPress={() => parentNavigation?.navigate('GifticonCreate')}
+            />
+          );
         }
         return <TabButton key={route.key} label={route.name} focused={focused} onPress={onPress} />;
       })}

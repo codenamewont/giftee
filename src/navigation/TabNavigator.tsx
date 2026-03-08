@@ -31,9 +31,13 @@ export default function TabNavigator() {
       tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen name="홈" component={HomeScreen} />
       <Tab.Screen name="쿠폰함" component={CouponBoxScreen}></Tab.Screen>
-      <Tab.Screen name="+">{() => <Dummy title="+" />}</Tab.Screen>
+      <Tab.Screen name="+" component={EmptyScreen}></Tab.Screen>
       <Tab.Screen name="내 활동">{() => <Dummy title="내 활동" />}</Tab.Screen>
       <Tab.Screen name="설정" component={SettingsScreen}></Tab.Screen>
     </Tab.Navigator>
   );
+}
+
+function EmptyScreen() {
+  return null;
 }
