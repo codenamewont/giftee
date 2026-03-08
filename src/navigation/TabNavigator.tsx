@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '@/screens/HomeScreen';
 import CouponBoxScreen from '@/screens/CouponBoxScreen';
+import SettingsScreen from '@/screens/SettingsScreen';
 import { View, Text } from 'react-native';
 import TabBar from './TabBar';
 
@@ -32,7 +33,7 @@ export default function TabNavigator() {
       <Tab.Screen name="쿠폰함" component={CouponBoxScreen}></Tab.Screen>
       <Tab.Screen name="+">{() => <Dummy title="+" />}</Tab.Screen>
       <Tab.Screen name="내 활동">{() => <Dummy title="내 활동" />}</Tab.Screen>
-      <Tab.Screen name="설정">{() => <Dummy title="설정" />}</Tab.Screen>
+      <Tab.Screen name="설정" component={SettingsScreen}></Tab.Screen>
     </Tab.Navigator>
   );
 }
