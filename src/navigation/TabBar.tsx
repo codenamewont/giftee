@@ -10,6 +10,8 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
   const { bottom } = useSafeAreaInsets();
   const parentNavigation = navigation.getParent();
 
+  const session = null; // 임시
+
   return (
     <View
       className="flex-row bg-white"
@@ -27,7 +29,13 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
           return (
             <TabAddButton
               key={route.key}
-              onPress={() => parentNavigation?.navigate('GifticonCreate')}
+              onPress={() => {
+                if (session) {
+                  parentNavigation?.navigate('GifticonCreate');
+                  return;
+                }
+                parentNavigation?.navigate('Login');
+              }}
             />
           );
         }
