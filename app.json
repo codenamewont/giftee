@@ -4,9 +4,6 @@
     "slug": "giftee",
     "version": "1.0.0",
     "scheme": "giftee",
-    "web": {
-      "favicon": "./src/assets/favicon.png"
-    },
     "experiments": {
       "tsconfigPaths": true
     },
@@ -17,7 +14,7 @@
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F6764E"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -27,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#F6764E"
       },
       "package": "com.leechaewonkr.giftee"
     }
