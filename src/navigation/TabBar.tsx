@@ -3,14 +3,14 @@ import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TabButton from './TabButton';
 import TabAddButton from './TabAddButton';
+import { useAuth } from '@/providers/AuthProvider';
 
 const TAB_BAR_HEIGHT = 80;
 
 export default function TabBar({ state, navigation }: BottomTabBarProps) {
   const { bottom } = useSafeAreaInsets();
   const parentNavigation = navigation.getParent();
-
-  const session = null; // 임시
+  const { session } = useAuth();
 
   return (
     <View
@@ -34,7 +34,7 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
                   parentNavigation?.navigate('GifticonCreate');
                   return;
                 }
-                parentNavigation?.navigate('Login');
+                parentNavigation?.navigate('Login', { redirectTo: 'GifticonCreate' });
               }}
             />
           );

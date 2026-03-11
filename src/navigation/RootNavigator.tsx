@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
+import { useAuth } from '@/providers/AuthProvider';
 import TabNavigator from './TabNavigator';
 import LoginScreen from '@/screens/LoginScreen';
 import GifticonCreateScreen from '@/screens/GifticonCreateScreen';
@@ -16,10 +17,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  // TODO: authState 연결 후 실제 auth 상태로 교체
-  const session = null;
-  const hasSignedInBefore = false;
-  const isAuthResolved = true;
+  const { session, hasSignedInBefore, isAuthResolved } = useAuth();
 
   useEffect(() => {
     if (isAuthResolved) {
@@ -31,12 +29,11 @@ export default function RootNavigator() {
     return null;
   }
 
-  // 기존 사용자이지만 세션이 없으면 앱 진입 시 로그인 화면부터 시작
-  const shouldRequireReLogin = !session && hasSignedInBefore;
+  const initialRouteName = session || !hasSignedInBefore ? 'MainTabs' : 'Login';
 
   return (
     <Stack.Navigator
-      initialRouteName={shouldRequireReLogin ? 'Login' : 'MainTabs'}
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerBackButtonDisplayMode: 'minimal',
         headerTitleAlign: 'center',
