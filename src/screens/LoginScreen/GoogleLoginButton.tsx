@@ -1,7 +1,7 @@
 import { Pressable, Text, Image } from 'react-native';
 
 type Props = {
-  onPress?: () => void;
+  onPress: () => void;
 };
 
 export default function GoogleLoginButton({ onPress }: Props) {
@@ -14,7 +14,7 @@ export default function GoogleLoginButton({ onPress }: Props) {
         style={{ width: 30, height: 30 }}
         resizeMode="contain"
       />
-      <Text className="font-pretBold text-[20px] text-black">Google 계정으로 계속하기</Text>
+      <Text className="font-pretMedium text-[20px] text-black">Google 계정으로 계속하기</Text>
     </Pressable>
   );
 }
