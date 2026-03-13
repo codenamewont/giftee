@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import CouponBoxTabs from './components/CouponBoxTabs';
@@ -7,83 +7,11 @@ import type { CouponBoxTabKey } from './components/CouponBoxTabs';
 import type { MainTabParamList } from '@/navigation/TabNavigator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CouponFilterChips from './components/CouponFilterChips';
-import type { GifticonCategory, GifticonListItemData } from '@/features/gifticon/types';
+import type { Gifticon, GifticonCategory, GifticonListItemData } from '@/features/gifticon/types';
 import CouponBoxList from './components/CouponBoxList';
+import { gifticonApi } from '@/features/gifticon/api/gifticonApi';
 
 type CouponBoxRoute = RouteProp<MainTabParamList, '쿠폰함'>;
-
-const mockItems: GifticonListItemData[] = [
-  {
-    id: '1',
-    brand: '베스킨라빈스',
-    productName: '싱글레귤러 교환권',
-    expiresAt: '2026-12-31',
-    status: 'active',
-    imageUrl: 'https://picsum.photos/200',
-    category: 'cafe/dessert',
-    isFavorite: true,
-  },
-  {
-    id: '2',
-    brand: '스타벅스',
-    productName: '아메리카노 T',
-    expiresAt: '2025-04-20',
-    status: 'expired',
-    imageUrl: 'https://picsum.photos/201',
-    category: 'cafe/dessert',
-    isFavorite: true,
-  },
-  {
-    id: '3',
-    brand: '올리브영',
-    productName: '기프트카드 2만원권',
-    expiresAt: '2026-03-10',
-    status: 'active',
-    imageUrl: 'https://picsum.photos/202',
-    category: 'voucher',
-    isFavorite: false,
-  },
-  {
-    id: '4',
-    brand: 'BBQ',
-    productName: '황금올리브치킨',
-    expiresAt: '2026-04-30',
-    status: 'used',
-    imageUrl: 'https://picsum.photos/203',
-    category: 'chicken/pizza',
-    isFavorite: true,
-  },
-  {
-    id: '5',
-    brand: 'CU',
-    productName: '모바일상품권 5천원',
-    expiresAt: '2026-05-12',
-    status: 'active',
-    imageUrl: 'https://picsum.photos/204',
-    category: 'convenience',
-    isFavorite: false,
-  },
-  {
-    id: '6',
-    brand: '교촌치킨',
-    productName: '허니콤보',
-    expiresAt: '2025-03-01',
-    status: 'expired',
-    imageUrl: 'https://picsum.photos/205',
-    category: 'chicken/pizza',
-    isFavorite: false,
-  },
-  {
-    id: '7',
-    brand: '교촌치킨',
-    productName: '허니콤보',
-    expiresAt: '2025-03-01',
-    status: 'expired',
-    imageUrl: 'https://picsum.photos/205',
-    category: 'chicken/pizza',
-    isFavorite: false,
-  },
-];
 
 export default function CouponBoxScreen() {
   const insets = useSafeAreaInsets();
@@ -93,16 +21,29 @@ export default function CouponBoxScreen() {
   const [tab, setTab] = useState<CouponBoxTabKey>(route.params?.initialTab ?? 'active');
   const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<GifticonCategory[]>([]);
+  const [gifticons, setGifticons] = useState<Gifticon[]>([]);
+
+  const loadGifticons = useCallback(async () => {
+    try {
+      const data = await gifticonApi.read();
+      setGifticons(data);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('쿠폰 목록을 불러오는 중 오류가 발생했습니다.');
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
+      loadGifticons();
+
       const nextTab = route.params?.initialTab;
 
       if (nextTab) {
         setTab(nextTab);
         navigation.setParams({ initialTab: undefined } as any);
       }
-    }, [route.params?.initialTab, navigation])
+    }, [loadGifticons, route.params?.initialTab, navigation])
   );
 
   const handleToggleFavorite = () => {
@@ -129,8 +70,21 @@ export default function CouponBoxScreen() {
     setSelectedCategories([]);
   };
 
+  const listItems = useMemo<GifticonListItemData[]>(() => {
+    return gifticons.map((item) => ({
+      id: item.id,
+      brand: item.brand,
+      productName: item.productName,
+      expiresAt: item.expiresAt,
+      status: item.status,
+      imageUrl: item.imageUrl,
+      category: item.category,
+      isFavorite: item.isFavorite,
+    }));
+  }, [gifticons]);
+
   const filteredItems = useMemo(() => {
-    const baseItems = mockItems.filter((item) => {
+    const baseItems = listItems.filter((item) => {
       return tab === 'active'
         ? item.status === 'active' || item.status === 'expired'
         : item.status === 'used';
@@ -143,7 +97,7 @@ export default function CouponBoxScreen() {
       return baseItems.filter((item) => selectedCategories.includes(item.category));
     }
     return baseItems;
-  }, [tab, favoriteOnly, selectedCategories]);
+  }, [tab, favoriteOnly, selectedCategories, listItems]);
 
   const sections = useMemo(() => {
     if (tab === 'active') {
