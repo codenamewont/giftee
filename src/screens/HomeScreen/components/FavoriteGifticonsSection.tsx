@@ -8,17 +8,7 @@ type Props = {
 };
 
 export default function FavoriteGifticonsSection({ items, maxItems = 5 }: Props) {
-  const activeItems = items.filter((item) => item.status === 'active');
-  const visibleItems = activeItems.slice(0, maxItems);
-
-  if (visibleItems.length === 0) {
-    return (
-      <View className="gap-2 px-4">
-        <Text className="font-pretBold text-[24px] leading-[29px] text-black">즐겨찾는 쿠폰</Text>
-        <Text>TODO</Text>
-      </View>
-    );
-  }
+  const visibleItems = items.slice(0, maxItems);
 
   return (
     <View className="gap-2 px-4">

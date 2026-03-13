@@ -1,81 +1,127 @@
 import { View, ScrollView } from 'react-native';
+import { useMemo, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import HomeHeader from './components/HomeHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ExpiringSoonSection from './components/ExpiringSoonSection';
 import TotalUsageSection from './components/TotalUsageSection';
 import FavoriteGifticonsSection from './components/FavoriteGifticonsSection';
 import type { ExpiringSoonGifticon } from './types';
-import type { GifticonListItemData } from '@/features/gifticon/types';
-
-const expiringSoonItems: ExpiringSoonGifticon[] = [
-  {
-    id: '1',
-    brand: '올리브영',
-    productName: '기프트카드 2만원권',
-    expiresAt: '2026-03-10',
-    imageUrl: 'https://biz-con.co.kr/upload/images/202306/400_20230621181620939_CouponA10000.png',
-  },
-  {
-    id: '2',
-    brand: '스타벅스',
-    productName: '아메리카노 T',
-    expiresAt: '2026-04-06',
-    imageUrl: 'https://sitem.ssgcdn.com/14/82/15/item/1000644158214_i1_332.jpg',
-  },
-  {
-    id: '3',
-    brand: 'BBQ',
-    productName: '황금올리브치킨',
-    expiresAt: '2026-03-08',
-    imageUrl: 'https://biz-con.co.kr/upload/images/202406/400_20240607111732818_10.jpg',
-  },
-];
-
-const favoriteItems: GifticonListItemData[] = [
-  {
-    id: '1',
-    brand: '베스킨라빈스',
-    productName: '싱글레귤러 교환권',
-    expiresAt: '2026-12-31',
-    status: 'active',
-    imageUrl: 'https://picsum.photos/200',
-    category: 'cafe/dessert',
-    isFavorite: true,
-  },
-  {
-    id: '2',
-    brand: '스타벅스',
-    productName: '아메리카노 T',
-    expiresAt: '2025-04-20',
-    status: 'expired',
-    imageUrl: 'https://picsum.photos/201',
-    category: 'cafe/dessert',
-    isFavorite: true,
-  },
-  {
-    id: '3',
-    brand: '올리브영',
-    productName: '기프트카드 2만원권',
-    expiresAt: '2026-03-10',
-    status: 'active',
-    imageUrl: 'https://picsum.photos/202',
-    category: 'voucher',
-    isFavorite: true,
-  },
-  {
-    id: '4',
-    brand: 'BBQ',
-    productName: '황금올리브치킨',
-    expiresAt: '2026-04-30',
-    status: 'used',
-    imageUrl: 'https://picsum.photos/203',
-    category: 'chicken/pizza',
-    isFavorite: true,
-  },
-];
+import { isExpiringSoon } from '@/features/gifticon/utils/date';
+import type { Gifticon, GifticonListItemData } from '@/features/gifticon/types';
+import { gifticonApi } from '@/features/gifticon/api/gifticonApi';
+import { supabase } from '@/lib/supabase';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const [userName, setUserName] = useState<string | null>(null);
+  const [gifticons, setGifticons] = useState<Gifticon[]>([]);
+
+  const loadHomeData = useCallback(async () => {
+    try {
+      const [sessionResult, gifticonList] = await Promise.all([
+        supabase.auth.getSession(),
+        gifticonApi.read(),
+      ]);
+
+      const session = sessionResult.data.session;
+      const metadata = session?.user.user_metadata;
+      const nextUserName = metadata?.full_name?.trim() || null;
+
+      setUserName(nextUserName);
+      setGifticons(gifticonList);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadHomeData();
+    }, [loadHomeData])
+  );
+
+  const availableCount = useMemo(() => {
+    return gifticons.filter((item) => item.status === 'active').length;
+  }, [gifticons]);
+
+  const usedThisMonthCount = useMemo(() => {
+    const now = new Date();
+
+    return gifticons.filter((item) => {
+      if (item.status !== 'used' || !item.usedAt) return false;
+      const usedDate = new Date(item.usedAt);
+      return usedDate.getFullYear() === now.getFullYear() && usedDate.getMonth() === now.getMonth();
+    }).length;
+  }, [gifticons]);
+
+  const usedThisMonthAmount = useMemo(() => {
+    const now = new Date();
+
+    return gifticons
+      .filter((item) => {
+        if (item.status !== 'used' || !item.usedAt) return false;
+
+        const usedDate = new Date(item.usedAt);
+
+        return (
+          usedDate.getFullYear() === now.getFullYear() && usedDate.getMonth() === now.getMonth()
+        );
+      })
+      .reduce((sum, item) => sum + item.price, 0);
+  }, [gifticons]);
+
+  const urgentExpiringItems = useMemo<ExpiringSoonGifticon[]>(() => {
+    return gifticons
+      .filter((item) => item.status === 'active' && isExpiringSoon(item.expiresAt, 7))
+      .sort((a, b) => a.expiresAt.localeCompare(b.expiresAt))
+      .map((item) => ({
+        id: item.id,
+        brand: item.brand,
+        productName: item.productName,
+        expiresAt: item.expiresAt,
+        imageUrl: item.imageUrl,
+      }));
+  }, [gifticons]);
+
+  const fallbackExpiringItems = useMemo<ExpiringSoonGifticon[]>(() => {
+    return gifticons
+      .filter((item) => item.status === 'active')
+      .sort((a, b) => a.expiresAt.localeCompare(b.expiresAt))
+      .slice(0, 3)
+      .map((item) => ({
+        id: item.id,
+        brand: item.brand,
+        productName: item.productName,
+        expiresAt: item.expiresAt,
+        imageUrl: item.imageUrl,
+      }));
+  }, [gifticons]);
+
+  const expiringSoonItems =
+    urgentExpiringItems.length > 0 ? urgentExpiringItems : fallbackExpiringItems;
+  const expiringSoonTitle = urgentExpiringItems.length > 0 ? '곧 만료되는 쿠폰' : '만료 예정 쿠폰';
+
+  const totalUsedAmount = useMemo(() => {
+    return gifticons
+      .filter((item) => item.status === 'used')
+      .reduce((sum, item) => sum + item.price, 0);
+  }, [gifticons]);
+
+  const favoriteItems = useMemo<GifticonListItemData[]>(() => {
+    return gifticons
+      .filter((item) => item.status === 'active' && item.isFavorite)
+      .map((item) => ({
+        id: item.id,
+        brand: item.brand,
+        productName: item.productName,
+        expiresAt: item.expiresAt,
+        status: item.status,
+        imageUrl: item.imageUrl,
+        category: item.category,
+        isFavorite: item.isFavorite,
+      }));
+  }, [gifticons]);
 
   return (
     <View className="flex-1 bg-background">
@@ -84,10 +130,10 @@ export default function HomeScreen() {
         className="absolute left-0 right-0 top-0 z-50 bg-white"
         style={{ paddingTop: insets.top }}>
         <HomeHeader
-          userName="이채원"
-          availableCount={8}
-          usedThisMonthCount={3}
-          totalUsedAmount={45000}
+          userName={userName}
+          availableCount={availableCount}
+          usedThisMonthCount={usedThisMonthCount}
+          usedThisMonthAmount={usedThisMonthAmount}
         />
       </View>
       {/* 스크롤 */}
@@ -100,9 +146,15 @@ export default function HomeScreen() {
           gap: 24,
         }}
         showsVerticalScrollIndicator={false}>
-        <ExpiringSoonSection items={expiringSoonItems} />
-        <TotalUsageSection />
-        <FavoriteGifticonsSection items={favoriteItems} />
+        {expiringSoonItems.length > 0 && (
+          <ExpiringSoonSection
+            title={expiringSoonTitle}
+            items={expiringSoonItems}
+            urgentCount={urgentExpiringItems.length}
+          />
+        )}
+        <TotalUsageSection totalUsedAmount={totalUsedAmount} />
+        {favoriteItems.length > 0 && <FavoriteGifticonsSection items={favoriteItems} />}
       </ScrollView>
     </View>
   );

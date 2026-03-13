@@ -25,7 +25,7 @@ export default function GifticonDetailScreen() {
     };
 
     loadGifticon();
-  }, [id]);
+  }, [id, navigation]);
 
   if (!gifticon) {
     return (
