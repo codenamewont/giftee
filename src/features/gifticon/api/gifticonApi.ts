@@ -44,6 +44,15 @@ async function readGifticons() {
   return rows.map(toGifticon);
 }
 
+async function readGifticonDetail(id: string) {
+  if (!id) throw new Error('id가 필요합니다.');
+
+  const { data, error } = await supabase.from('gifticons').select('*').eq('id', id).single();
+  if (error) throw error;
+
+  return toGifticon(data);
+}
+
 // UPDATE
 async function updateGifticon(id: string, patch: Parameters<typeof toGifticonUpdateRow>[0]) {
   if (!id) throw new Error('id가 필요합니다.');
@@ -65,6 +74,7 @@ async function deleteGifticon(id: string) {
 export const gifticonApi = {
   create: createGifticon,
   read: readGifticons,
+  readDetail: readGifticonDetail,
   update: updateGifticon,
   delete: deleteGifticon,
 };

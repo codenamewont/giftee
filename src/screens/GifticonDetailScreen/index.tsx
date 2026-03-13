@@ -1,48 +1,32 @@
-import { Image, ScrollView, View, Text } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { useState } from 'react';
+import { Alert, Image, ScrollView, View, Text } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import type { Gifticon } from '@/features/gifticon/types';
-
-type GifticonDetailItem = Pick<
-  Gifticon,
-  'id' | 'brand' | 'productName' | 'imageUrl' | 'expiresAt' | 'status'
->;
-
-const mockGifticons: GifticonDetailItem[] = [
-  {
-    id: '1',
-    brand: '뚜레쥬르',
-    productName: '행복한 플라워 하트 케이크',
-    imageUrl:
-      'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/199/498fdd92dc4a27025bdca3748cc8da34_res.jpeg',
-    expiresAt: '2026-12-31',
-    status: 'active',
-  },
-  {
-    id: '2',
-    brand: '스타벅스',
-    productName: '카페아메리카노 Tall',
-    imageUrl:
-      'https://blog.kakaocdn.net/dna/rv3Ng/btqy67l3Ppd/AAAAAAAAAAAAAAAAAAAAAORWkoltJhumNLjsNa_dmkK5mcW2DTlaJ5uDGnmi8O7z/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1774969199&allow_ip=&allow_referer=&signature=f4vpOHxpQTYwk6kcelIIllZ0fzA%3D',
-    expiresAt: '2026-11-30',
-    status: 'active',
-  },
-  {
-    id: '3',
-    brand: '스타벅스',
-    productName: '아이스 카페 라떼 Tall',
-    imageUrl: 'https://www.efnews.co.kr/news/photo/201710/72345_38991_2318.png',
-    expiresAt: '2026-11-30',
-    status: 'active',
-  },
-];
+import { gifticonApi } from '@/features/gifticon/api/gifticonApi';
 
 export default function GifticonDetailScreen() {
   const route = useRoute();
+  const navigation = useNavigation();
   const { id } = route.params as { id: string };
 
   const [aspectRatio, setAspectRatio] = useState(1);
-  const gifticon = mockGifticons.find((item) => item.id === id);
+  const [gifticon, setGifticon] = useState<Gifticon | null>(null);
+
+  useEffect(() => {
+    const loadGifticon = async () => {
+      try {
+        const data = await gifticonApi.readDetail(id);
+        setGifticon(data);
+      } catch (error) {
+        console.error(error);
+        Alert.alert('쿠폰 정보를 불러오는 중 오류가 발생했습니다.');
+        navigation.goBack();
+      }
+    };
+
+    loadGifticon();
+  }, [id]);
+
   if (!gifticon) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
