@@ -1,4 +1,4 @@
-import type { DateString, DateTimeString } from '../types';
+import type { DateString } from '../types';
 
 // DateString을 Date로 변환
 export function toDate(dateString: DateString): Date {
@@ -8,6 +8,15 @@ export function toDate(dateString: DateString): Date {
     return new Date(NaN);
   }
   return new Date(y, m - 1, d);
+}
+
+// Date를 DateString으로 변환
+export function toDateString(date: Date): DateString {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+
+  return `${y}-${m}-${d}` as DateString;
 }
 
 // UI 표시용: YYYY-MM-DD -> YYYY.MM.DD

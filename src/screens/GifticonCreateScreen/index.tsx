@@ -1,8 +1,56 @@
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { gifticonApi } from '@/features/gifticon/api/gifticonApi';
+import { toDateString } from '@/features/gifticon/utils/date';
+import FieldLabel from './components/FieldLabel';
+import InputField from './components/InputField';
+import ExpireDateField from './components/ExpireDateField';
+import { useNavigation } from '@react-navigation/native';
 
 export default function GifticonCreateScreen() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+
+  const [brand, setBrand] = useState('');
+  const [productName, setProductName] = useState('');
+  const [price, setPrice] = useState('');
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!brand.trim() || !productName.trim() || !price.trim() || !expiresAt) {
+      Alert.alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    const parsedPrice = Number(price.replace(/[^0-9]/g, ''));
+    if (Number.isNaN(parsedPrice) || parsedPrice <= 0) {
+      Alert.alert('가격을 올바르게 입력해주세요.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await gifticonApi.create({
+        brand: brand.trim(),
+        productName: productName.trim(),
+        price: parsedPrice,
+        expiresAt: toDateString(expiresAt),
+        imageUrl: 'https://picsum.photos/400',
+        imageHash: 'temp-image-hash',
+      });
+
+      Alert.alert('기프티콘이 쿠폰함에 등록되었습니다.', undefined, [
+        { text: '확인', onPress: () => navigation.goBack() },
+      ]);
+    } catch (error) {
+      Alert.alert('기프티콘 등록 중 오류가 발생했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <View className="flex-1 bg-background">
@@ -35,48 +83,38 @@ export default function GifticonCreateScreen() {
         <View className="gap-4">
           <View>
             <FieldLabel label="브랜드명" />
-            <InputField placeholder="브랜드명을 입력하세요" />
+            <InputField placeholder="브랜드명을 입력하세요" value={brand} onChangeText={setBrand} />
           </View>
           <View>
             <FieldLabel label="상품명" />
-            <InputField placeholder="상품명을 입력하세요" />
+            <InputField
+              placeholder="상품명을 입력하세요"
+              value={productName}
+              onChangeText={setProductName}
+            />
           </View>
           <View>
             <FieldLabel label="가격" />
-            <InputField placeholder="가격을 입력하세요" />
+            <InputField
+              placeholder="가격을 입력하세요"
+              value={price}
+              onChangeText={(text) => setPrice(text.replace(/[^0-9]/g, ''))}
+              keyboardType="number-pad"
+            />
           </View>
-          <View>
-            <FieldLabel label="만료일" />
-            <InputField placeholder="만료일을 선택하세요" />
-          </View>
+          <ExpireDateField value={expiresAt} onChange={setExpiresAt} />
         </View>
       </ScrollView>
 
       {/* 등록 버튼 */}
       <Pressable
+        onPress={handleSubmit}
+        disabled={isSubmitting}
         className="absolute left-0 right-0 mx-4 h-20 items-center justify-center rounded-full bg-primary"
         style={{ bottom: insets.bottom + 20 }}>
         <Text className="font-pretBold text-[20px] text-white">등록 완료</Text>
       </Pressable>
     </View>
-  );
-}
-
-function FieldLabel({ label }: { label: string }) {
-  return (
-    <Text className="mb-[10px] px-5 font-pretBold text-[16px] leading-[19px] text-black">
-      {label}
-    </Text>
-  );
-}
-
-function InputField({ placeholder }: { placeholder: string }) {
-  return (
-    <TextInput
-      placeholder={placeholder}
-      placeholderTextColor="#979797"
-      className="rounded-full bg-white px-[21px] py-6 font-pretMedium text-[16px] leading-[19px] text-black"
-    />
   );
 }
 

@@ -7,7 +7,12 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "plugins": ["expo-dev-client", "expo-web-browser", "expo-font"],
+    "plugins": [
+      "expo-dev-client",
+      "expo-web-browser",
+      "expo-font",
+      "@react-native-community/datetimepicker"
+    ],
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,7 +21,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#F6764E"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.leechaewonkr.giftee"
