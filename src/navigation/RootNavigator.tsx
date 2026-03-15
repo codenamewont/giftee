@@ -6,12 +6,14 @@ import TabNavigator from './TabNavigator';
 import LoginScreen from '@/screens/LoginScreen';
 import GifticonCreateScreen from '@/screens/GifticonCreateScreen';
 import GifticonDetailScreen from '@/screens/GifticonDetailScreen';
+import AccountScreen from '@/screens/SettingsScreen/AccountScreen';
 
 export type RootStackParamList = {
   MainTabs: undefined;
   Login: { redirectTo?: 'GifticonCreate' } | undefined;
   GifticonCreate: undefined;
   GifticonDetail: { id: string };
+  AccountSettings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -56,6 +58,11 @@ export default function RootNavigator() {
         name="GifticonDetail"
         component={GifticonDetailScreen}
         options={{ title: '쿠폰 상세' }}
+      />
+      <Stack.Screen
+        name="AccountSettings"
+        component={AccountScreen}
+        options={{ title: '프로필 설정' }}
       />
     </Stack.Navigator>
   );
