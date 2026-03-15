@@ -21,12 +21,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#F6764E"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.leechaewonkr.giftee"
+      "bundleIdentifier": "com.leechaewonkr.giftee",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "기프티콘 이미지를 등록하기 위해 사진 보관함 접근 권한이 필요합니다."
+      }
     },
     "android": {
       "adaptiveIcon": {

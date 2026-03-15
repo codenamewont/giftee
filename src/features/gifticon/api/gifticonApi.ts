@@ -35,13 +35,33 @@ async function createGifticon(input: CreateGifticonInput) {
   if (error) throw error;
 }
 
+// createSignedImageUrl
+async function createSignedImageUrl(imagePath: string) {
+  const { data, error } = await supabase.storage.from('images').createSignedUrl(imagePath, 60 * 60);
+
+  if (error) throw error;
+  return data.signedUrl;
+}
+
 // READ
 async function readGifticons() {
   const { data, error } = await supabase.from('gifticons').select('*');
   if (error) throw error;
 
   const rows = (data ?? []) as GifticonRow[];
-  return rows.map(toGifticon);
+
+  const gifticons = await Promise.all(
+    rows.map(async (row) => {
+      const signedImageUrl = await createSignedImageUrl(row.image_url);
+
+      return toGifticon({
+        ...row,
+        image_url: signedImageUrl,
+      });
+    })
+  );
+
+  return gifticons;
 }
 
 async function readGifticonDetail(id: string) {
@@ -50,7 +70,13 @@ async function readGifticonDetail(id: string) {
   const { data, error } = await supabase.from('gifticons').select('*').eq('id', id).single();
   if (error) throw error;
 
-  return toGifticon(data);
+  const row = data as GifticonRow;
+  const signedImageUrl = await createSignedImageUrl(row.image_url);
+
+  return toGifticon({
+    ...row,
+    image_url: signedImageUrl,
+  });
 }
 
 // UPDATE

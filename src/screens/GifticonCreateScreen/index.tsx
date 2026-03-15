@@ -7,6 +7,12 @@ import FieldLabel from './components/FieldLabel';
 import InputField from './components/InputField';
 import ExpireDateField from './components/ExpireDateField';
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
+import * as Crypto from 'expo-crypto';
+import * as FileSystem from 'expo-file-system/legacy';
+import { decode } from 'base64-arraybuffer';
+import { supabase } from '@/lib/supabase';
+import AddImageIcon from '@/assets/icons/add-image.svg';
 
 export default function GifticonCreateScreen() {
   const insets = useSafeAreaInsets();
@@ -16,10 +22,83 @@ export default function GifticonCreateScreen() {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handlePickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert('사진 접근 권한이 필요합니다.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 1,
+    });
+
+    if (result.canceled) return;
+
+    setImageUri(result.assets[0].uri);
+  };
+
+  const getImageHash = async (fileBase64: string) => {
+    return Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, fileBase64, {
+      encoding: Crypto.CryptoEncoding.HEX,
+    });
+  };
+
+  const getContentType = (fileExtension: string) => {
+    if (fileExtension === 'jpg' || fileExtension === 'jpeg') {
+      return 'image/jpeg';
+    }
+    if (fileExtension === 'png') {
+      return 'image/png';
+    }
+    if (fileExtension === 'webp') {
+      return 'image/webp';
+    }
+
+    return 'application/octet-stream';
+  };
+
+  const uploadImage = async (uri: string, userId: string) => {
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    const imageHash = await getImageHash(base64);
+
+    const { data: existingGifticon, error: duplicateCheckError } = await supabase
+      .from('gifticons')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('image_hash', imageHash)
+      .maybeSingle();
+    if (duplicateCheckError) throw duplicateCheckError;
+    if (existingGifticon) {
+      throw new Error('이미 등록한 기프티콘 이미지입니다.');
+    }
+
+    const fileExtension = uri.split('.').pop()?.toLowerCase() ?? 'jpg';
+    const filePath = `gifticons/${userId}/${imageHash}.${fileExtension}`;
+    const fileData = decode(base64);
+
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(filePath, fileData, {
+        contentType: getContentType(fileExtension),
+        upsert: false,
+      });
+    if (uploadError) throw uploadError;
+
+    return {
+      imageUrl: filePath,
+      imageHash,
+    };
+  };
+
   const handleSubmit = async () => {
-    if (!brand.trim() || !productName.trim() || !price.trim() || !expiresAt) {
+    if (!imageUri || !brand.trim() || !productName.trim() || !price.trim() || !expiresAt) {
       Alert.alert('모든 항목을 입력해주세요.');
       return;
     }
@@ -33,19 +112,38 @@ export default function GifticonCreateScreen() {
     try {
       setIsSubmitting(true);
 
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+      if (sessionError) throw sessionError;
+      if (!session) throw new Error('로그인이 필요합니다.');
+
+      const { imageUrl, imageHash } = await uploadImage(imageUri, session.user.id);
+
       await gifticonApi.create({
         brand: brand.trim(),
         productName: productName.trim(),
         price: parsedPrice,
         expiresAt: toDateString(expiresAt),
-        imageUrl: 'https://picsum.photos/400',
-        imageHash: 'temp-image-hash',
+        imageUrl,
+        imageHash,
       });
 
       Alert.alert('기프티콘이 쿠폰함에 등록되었습니다.', undefined, [
         { text: '확인', onPress: () => navigation.goBack() },
       ]);
     } catch (error) {
+      if (error instanceof Error) {
+        if (
+          error.message === '이미 등록한 기프티콘 이미지입니다.' ||
+          error.message === '로그인이 필요합니다.'
+        ) {
+          Alert.alert(error.message);
+          return;
+        }
+      }
+
       Alert.alert('기프티콘 등록 중 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
@@ -64,10 +162,12 @@ export default function GifticonCreateScreen() {
         {/* 이미지 업로드 */}
         <View className="px-[3px] py-[19px]">
           <View className="relative overflow-hidden">
-            <Pressable className="h-60 w-full items-center justify-center border-2 border-gray-ui">
+            <Pressable
+              onPress={handlePickImage}
+              className="h-60 w-full items-center justify-center border-2 border-gray-ui">
               <TearLine className="-top-[10px]" />
               <View className="items-center">
-                <View className="mb-6 h-[60px] w-[60px] bg-black" />
+                <AddImageIcon width={60} height={60} color="#F6764E" style={{ marginBottom: 24 }} />
                 <Text className="mb-1 font-pretBold text-[20px] leading-[24px] text-black">
                   쿠폰 이미지 업로드
                 </Text>
