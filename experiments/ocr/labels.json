@@ -1,0 +1,212 @@
+[
+  {
+    "image": "01.png",
+    "platform": "etc",
+    "brand": "교보문고",
+    "product": "기프트카드",
+    "expiry": ""
+  },
+  {
+    "image": "02.png",
+    "platform": "giftishow",
+    "brand": "메가MGC커피",
+    "product": "(ICE)아메리카노",
+    "expiry": "2026-03-17"
+  },
+  {
+    "image": "03.png",
+    "platform": "giftishow",
+    "brand": "배달의민족",
+    "product": "모바일상품권 2만원권",
+    "expiry": "2026-03-30"
+  },
+  {
+    "image": "04.png",
+    "platform": "giftishow",
+    "brand": "배달의민족",
+    "product": "모바일상품권 2만원권",
+    "expiry": "2026-03-30"
+  },
+  {
+    "image": "05.png",
+    "platform": "giftishow",
+    "brand": "올리브영",
+    "product": "모바일상품권 10000원권",
+    "expiry": "2026-03-30"
+  },
+  {
+    "image": "06.png",
+    "platform": "giftishow",
+    "brand": "배달의민족",
+    "product": "모바일상품권 2만원권",
+    "expiry": "2026-03-30"
+  },
+  {
+    "image": "07.png",
+    "platform": "giftishow",
+    "brand": "배달의민족",
+    "product": "모바일상품권 2만원권",
+    "expiry": "2026-03-30"
+  },
+  {
+    "image": "08.png",
+    "platform": "giftishow",
+    "brand": "스타벅스",
+    "product": "아이스 카페 아메리카노 Tall",
+    "expiry": "2026-04-14"
+  },
+  {
+    "image": "09.png",
+    "platform": "etc",
+    "brand": "올리브영",
+    "product": "기프트카드 5만원권",
+    "expiry": "2026-12-28"
+  },
+  {
+    "image": "10.png",
+    "platform": "etc",
+    "brand": "올리브영",
+    "product": "기프트카드 5만원권",
+    "expiry": "2026-12-28"
+  },
+  {
+    "image": "11.png",
+    "platform": "kakao",
+    "brand": "GS25",
+    "product": "롯데)아몬드빼빼로(지함)",
+    "expiry": "2025-11-12"
+  },
+  {
+    "image": "12.png",
+    "platform": "kakao",
+    "brand": "GS25",
+    "product": "롯데)초코빼빼로(지함)",
+    "expiry": "2025-11-12"
+  },
+  {
+    "image": "13.png",
+    "platform": "kakao",
+    "brand": "GS25",
+    "product": "롯데)초코필드빼빼로(지함)",
+    "expiry": "2025-11-12"
+  },
+  {
+    "image": "14.png",
+    "platform": "kakao",
+    "brand": "GS25",
+    "product": "롯데)크런키빼빼로(지함)",
+    "expiry": "2025-11-12"
+  },
+  {
+    "image": "15.png",
+    "platform": "kakao",
+    "brand": "GS25",
+    "product": "CJ)햇반미역국밥(컵밥)",
+    "expiry": "2025-06-13"
+  },
+  {
+    "image": "16.png",
+    "platform": "giftishow",
+    "brand": "스타벅스",
+    "product": "아이스 카페 아메리카노 Tall 2잔",
+    "expiry": "2025-07-25"
+  },
+  {
+    "image": "17.png",
+    "platform": "inumber",
+    "brand": "스타벅스",
+    "product": "아이스 카페 아메리카노 Tall",
+    "expiry": "2027-02-06"
+  },
+  {
+    "image": "18.png",
+    "platform": "inumber",
+    "brand": "CU",
+    "product": "광동)비타500_100ml(병)",
+    "expiry": "2021-11-26"
+  },
+  {
+    "image": "19.png",
+    "platform": "inumber",
+    "brand": "스타벅스",
+    "product": "카페 아메리카노 Tall",
+    "expiry": "2019-06-17"
+  },
+  {
+    "image": "20.png",
+    "platform": "inumber",
+    "brand": "맥도날드",
+    "product": "더블 불고기버거 세트",
+    "expiry": "2019-11-18"
+  },
+  {
+    "image": "21.png",
+    "platform": "etc",
+    "brand": "CU",
+    "product": "주)리치참치마요",
+    "expiry": "2021-09-02"
+  },
+  {
+    "image": "22.png",
+    "platform": "giftishow",
+    "brand": "CU",
+    "product": "광동)비타500",
+    "expiry": "2021-08-14"
+  },
+  {
+    "image": "23.png",
+    "platform": "kakao",
+    "brand": "세븐일레븐",
+    "product": "농심)육개장사발면",
+    "expiry": "2024-03-14"
+  },
+  {
+    "image": "24.png",
+    "platform": "kakao",
+    "brand": "투썸플레이스",
+    "product": "떠먹는 아이스박스",
+    "expiry": "2022-08-24"
+  },
+  {
+    "image": "25.png",
+    "platform": "kakao",
+    "brand": "배스킨라빈스",
+    "product": "싱글레귤러 아이스크림",
+    "expiry": "2022-03-31"
+  },
+  {
+    "image": "26.png",
+    "platform": "kakao",
+    "brand": "맥도날드",
+    "product": "불고기 버거 세트",
+    "expiry": "2026-01-14"
+  },
+  {
+    "image": "27.png",
+    "platform": "inumber",
+    "brand": "롯데리아",
+    "product": "데리버거",
+    "expiry": "2025-11-04"
+  },
+  {
+    "image": "28.png",
+    "platform": "inumber",
+    "brand": "스타벅스",
+    "product": "카라멜 마키아또 Tall",
+    "expiry": "2016-02-04"
+  },
+  {
+    "image": "29.png",
+    "platform": "inumber",
+    "brand": "맥도날드",
+    "product": "애플파이",
+    "expiry": "2020-01-30"
+  },
+  {
+    "image": "30.png",
+    "platform": "inumber",
+    "brand": "CU",
+    "product": "농심)신라면",
+    "expiry": "2025-07-09"
+  }
+]
