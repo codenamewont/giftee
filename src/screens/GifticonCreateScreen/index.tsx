@@ -13,7 +13,8 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 import { supabase } from '@/lib/supabase';
 import AddImageIcon from '@/assets/icons/add-image.svg';
-import { runExpiryExperiment } from 'experiments/ocr/runExpiryExperiment';
+import { extractText } from '@/features/gifticon/utils/ocr/extractText';
+import { parseExpiry } from '@/features/gifticon/utils/ocr/parseExpiry';
 
 export default function GifticonCreateScreen() {
   const insets = useSafeAreaInsets();
@@ -45,7 +46,11 @@ export default function GifticonCreateScreen() {
 
     // Android에서 OCR 라이브러리가 불안정하여 iOS에서만 실행
     if (Platform.OS === 'ios') {
-      await runExpiryExperiment();
+      const lines = await extractText(uri);
+      const expiry = parseExpiry(lines);
+      if (expiry) {
+        setExpiresAt(new Date(expiry));
+      }
     }
   };
 
