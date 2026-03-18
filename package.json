@@ -27,6 +27,7 @@
     "expo-image-picker": "~17.0.10",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.8",
+    "expo-text-extractor": "^2.0.0",
     "expo-web-browser": "~15.0.10",
     "nativewind": "latest",
     "react": "19.1.0",

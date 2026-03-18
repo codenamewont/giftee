@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { gifticonApi } from '@/features/gifticon/api/gifticonApi';
 import { toDateString } from '@/features/gifticon/utils/date';
@@ -13,6 +13,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 import { supabase } from '@/lib/supabase';
 import AddImageIcon from '@/assets/icons/add-image.svg';
+import { extractText } from '@/features/gifticon/utils/ocr/extractText';
 
 export default function GifticonCreateScreen() {
   const insets = useSafeAreaInsets();
@@ -39,7 +40,14 @@ export default function GifticonCreateScreen() {
 
     if (result.canceled) return;
 
-    setImageUri(result.assets[0].uri);
+    const uri = result.assets[0].uri;
+    setImageUri(uri);
+
+    // Android에서 OCR 라이브러리가 불안정하여 iOS에서만 실행
+    if (Platform.OS === 'ios') {
+      const lines = await extractText(uri);
+      console.log(lines);
+    }
   };
 
   const getImageHash = async (fileBase64: string) => {
