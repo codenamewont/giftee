@@ -3,7 +3,7 @@ export function parseExpiry(lines: string[]): string {
 
   // 기간 날짜
   const rangeMatch = text.match(
-    /(20\d{2,3})[.\-/\s](\d{1,3})[.\-/\s](\d{1,3})\s*~\s*(20\d{2,3})[.\-/\s](\d{1,3})[.\-/\s](\d{1,3})/
+    /(20\d{2,3})[.\-/\s,](\d{1,3})[.\-/\s,](\d{1,3})\s*~\s*(20\d{2,3})[.\-/\s,](\d{1,3})[.\-/\s,](\d{1,3})/
   );
 
   if (rangeMatch) {
@@ -15,7 +15,7 @@ export function parseExpiry(lines: string[]): string {
   }
 
   // 단일 날짜
-  const match = text.match(/(20\d{2,3})[.\-/\s](\d{1,3})[.\-/\s](\d{1,3})/);
+  const match = text.match(/(20\d{2,3})[.\-/\s,](\d{1,3})[.\-/\s,](\d{1,3})/);
 
   if (!match) return '';
 
